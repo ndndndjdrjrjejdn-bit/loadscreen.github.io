@@ -3,9 +3,12 @@
 <head>
     <title>GmodLoad | Modern UI</title>
     <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
     <style>
         /* --- СОВРЕМЕННЫЙ СБРОС И БАЗОВЫЕ НАСТРОЙКИ --- */
@@ -24,12 +27,58 @@
             background-color: #0c1017;
         }
 
+        /* --- ЗАДНИЙ ФОН --- */
+        #bg-container {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -2;
+            background-color: #000;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+        .bg-image.active {
+            opacity: 1;
+        }
+
         /* Тёмное затемнение поверх сменяющихся фонов */
         .overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%);
             z-index: -1;
+        }
+
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ МУЗЫКИ --- */
+        .top-music-bar {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 25, 35, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 20;
+            white-space: nowrap;
+        }
+        .top-music-bar span {
+            color: #00c6ff;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
         }
 
         /* --- ГЛАВНАЯ СЕТКА (FLEXBOX) --- */
@@ -38,7 +87,7 @@
             flex-direction: column;
             justify-content: space-between;
             height: 100vh;
-            padding: 3vw 4vw;
+            padding: 4vw 4vw 3vw 4vw; /* Увеличили отступ сверху для панели музыки */
             position: relative;
             z-index: 10;
         }
@@ -61,6 +110,7 @@
             align-items: flex-start;
             flex-wrap: wrap;
             gap: 20px;
+            margin-top: 20px;
         }
 
         .server-info-box h1 {
@@ -123,7 +173,6 @@
             letter-spacing: 1px;
         }
 
-        /* Красивый прогресс-бар */
         .progress-wrapper {
             width: 100%;
             max-width: 800px;
@@ -199,28 +248,34 @@
         .k-load-rule { margin-bottom: 5px; font-size: 0.95rem; color: #ddd; }
         .k-load-rule::before { content: "» "; color: #00c6ff; font-weight: bold; }
 
-        /* Стили для сообщений (JS) */
         .messages { font-size: 1.2rem; font-style: italic; transition: opacity 0.5s; }
 
         /* Иконка загрузки */
-        .spinner {
-            animation: spin 2s linear infinite;
-        }
+        .spinner { animation: spin 2s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         /* АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
         @media (max-width: 900px) {
             .app-container { padding: 20px; }
-            .header { flex-direction: column-reverse; align-items: center; text-align: center; }
+            .header { flex-direction: column-reverse; align-items: center; text-align: center; margin-top: 50px;}
             .user-profile { text-align: center; flex-direction: column; }
-            .server-info-box p { display: none; /* Прячем длинное описание на малых экранах */ }
+            .server-info-box p { display: none; }
             .footer { grid-template-columns: 1fr; }
+            .top-music-bar { width: 90%; justify-content: center; font-size: 0.85rem; top: 15px;}
         }
     </style>
 </head>
 <body>
 
+<!-- Контейнер для фонов -->
+<div id="bg-container"></div>
 <div class="overlay"></div>
+
+<!-- ПАНЕЛЬ МУЗЫКИ СВЕРХУ -->
+<div class="top-music-bar">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#00c6ff" viewBox="0 0 512 512"><path d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7v72V368c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V147L192 223.8V432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V200 128c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z"/></svg>
+    Играет музыка: <span id="music-name-display">Ожидание...</span>
+</div>
 
 <div class="app-container">
     <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
@@ -285,17 +340,13 @@
         <div class="footer-card glass-panel">
             <h2>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7v72V368c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V147L192 223.8V432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V200 128c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z"/></svg>
-                Музыка
+                Сервер
             </h2>
-            <p class="current-song">Ожидание музыки...</p>
             <div class="messages" style="margin-top: 15px; color:#00c6ff; font-size: 0.95rem;"></div>
         </div>
     </footer>
 </div>
 
-<!-- ========================================== -->
-<!-- НИЖЕ ИДЕТ ОРИГИНАЛЬНЫЙ JAVASCRIPT ЛОГИКИ   -->
-<!-- ========================================== -->
 <script type="text/javascript">
     window.globalConfig = JSON.parse('{\u0022backgrounds\u0022:{\u0022random\u0022:true,\u0022fade\u0022:1000,\u0022duration\u0022:5000},\u0022messages\u0022:{\u0022random\u0022:true,\u0022fade\u0022:1000,\u0022duration\u0022:5000},\u0022staff\u0022:{\u0022duration\u0022:6000,\u0022perPage\u0022:1},\u0022rules\u0022:{\u0022perPage\u0022:3,\u0022fade\u0022:500,\u0022duration\u0022:8000},\u0022music\u0022:{\u0022volume\u0022:10}}');
 
@@ -303,7 +354,6 @@
 
     window.messages = JSON.parse('[{\u0022message\u0022:\u0022Добро пожаловать!\u0022}, {\u0022message\u0022:\u0022Загружаем контент...\u0022}]');
 
-    window.staff = [];
     window.rules = [
         {rule: "Запрещено использование читов"},
         {rule: "Уважайте других игроков"},
@@ -311,22 +361,24 @@
         {rule: "Соблюдайте правила режима"},
         {rule: "Администрация всегда права"}
     ];
-    window.music = [];
+    
+    // ДЕМО-ПЛЕЙЛИСТ (чтобы менялся текст музыки)
+    window.musicTracks = [
+        "Mick Gordon - BFG Division", 
+        "Carpenter Brut - Roller Mobster", 
+        "Scattle - Knock Knock"
+    ];
 </script>
 
 <script type="text/javascript">
     var KLoad = {
         isGmod: navigator.userAgent.toLowerCase().indexOf('valve') !== -1,
-        loadingHooks: {},
         events: {},
         data: {
             demoMode: false,
-            volume: 15,
-            GameDetails: {},
             files: { downloaded: 0, needed: 1, total: 1, downloadComplete: false },
         },
-        finishedStatuses: [ 'Sending client info...', 'Client info sent!', 'Received all Lua files we needed!', 'No files to request!', 'Starting Lua...' ],
-        tmp: { ignoreLoadings: false, lastFileDownloaded: null, statuses: [], progressRegex: /(\d+)\/(\d+)/ }
+        finishedStatuses: [ 'Sending client info...', 'Client info sent!', 'Received all Lua files we needed!', 'No files to request!', 'Starting Lua...' ]
     };
 
     KLoad.emit = function (event) {
@@ -335,6 +387,7 @@
             KLoad.events[event].forEach(function (func) { func.apply(null, args); });
         }
     };
+    
     KLoad.on = function (event, func) {
         if (typeof KLoad.events[event] === 'undefined') { KLoad.events[event] = []; }
         KLoad.events[event].push(func);
@@ -364,7 +417,6 @@
         if ((KLoad.data.files.needed <= 0 || KLoad.data.files.downloaded >= KLoad.data.files.needed) && !KLoad.data.demoMode) {
             SetFilesNeeded(KLoad.data.files.downloaded + 1);
         }
-        KLoad.tmp.lastFileDownloaded = file;
         text('.status', 'Скачивание ' + file);
         text('.files-downloading', file);
         if (!KLoad.data.files.downloadComplete) { KLoad.emit('DownloadProgress', KLoad.getProgress()); }
@@ -394,21 +446,20 @@
         window.SetStatusChanged = function (s) { KLoad.emit('SetStatusChanged', s); };
     };
 
-    // Фоны
+    // ОБНОВЛЕННЫЕ ФОНЫ (работают стабильнее)
     KLoad.Backgrounds = {
         init: function (bgs) {
             this.bgs = bgs;
-            this.container = document.createElement('div');
-            this.container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background-color:#000;';
-            document.body.prepend(this.container);
+            this.container = document.getElementById('bg-container');
             this.index = 0;
             this.start();
         },
         start: function () {
-            if(this.bgs.length === 0) return;
-            this.bgs.forEach((url, i) => {
+            if(!this.bgs || this.bgs.length === 0) return;
+            this.bgs.forEach((url) => {
                 let div = document.createElement('div');
-                div.style.cssText = `position:absolute;width:100%;height:100%;background:url(${url}) center/cover;opacity:0;transition:opacity 1s ease-in-out;`;
+                div.className = 'bg-image';
+                div.style.backgroundImage = `url(${url})`;
                 this.container.appendChild(div);
             });
             this.next();
@@ -416,13 +467,16 @@
         },
         next: function() {
             let divs = this.container.children;
-            for(let i=0; i<divs.length; i++) divs[i].style.opacity = '0';
-            divs[this.index].style.opacity = '1';
+            if (divs.length === 0) return;
+            for(let i = 0; i < divs.length; i++) {
+                divs[i].classList.remove('active');
+            }
+            divs[this.index].classList.add('active');
             this.index = (this.index + 1) % this.bgs.length;
         }
     };
 
-    // Правила (Слайдер)
+    // ПРАВИЛА
     function startRules() {
         let block = document.getElementById('k-load-rules');
         if(!window.rules || window.rules.length === 0) { block.innerHTML = "Нет правил."; return; }
@@ -453,7 +507,7 @@
         }
     }
 
-    // Сообщения
+    // СООБЩЕНИЯ
     function startMessages() {
         if(!window.messages || window.messages.length === 0) return;
         let el = document.querySelector('.messages');
@@ -469,16 +523,37 @@
         }, 4000);
     }
 
+    // ЛОГИКА ОТОБРАЖЕНИЯ МУЗЫКИ (Сверху)
+    function startMusicDisplay() {
+        let topMusicSpan = document.getElementById('music-name-display');
+        if(!window.musicTracks || window.musicTracks.length === 0) {
+            topMusicSpan.innerText = "Тишина";
+            return;
+        }
+        
+        let index = 0;
+        function updateMusicName() {
+            topMusicSpan.innerText = window.musicTracks[index];
+            index = (index + 1) % window.musicTracks.length;
+        }
+        
+        updateMusicName();
+        // В демо-режиме меняем название трека каждые 15 секунд для красоты
+        setInterval(updateMusicName, 15000); 
+    }
+
+    // ИНИЦИАЛИЗАЦИЯ
     KLoad.init();
     if(window.backgrounds) KLoad.Backgrounds.init(window.backgrounds);
     startRules();
     startMessages();
+    startMusicDisplay();
 
     // ДЕМО РЕЖИМ (Если открыто в браузере)
     if (!KLoad.isGmod) {
         KLoad.data.demoMode = true;
         window.SetFilesNeeded(150);
-        window.GameDetails('ClassiX MiniGames', window.location.href, 'mg_run_v2', 32, '76561197960287930', 'minigames', 50, 'ru', 'MiniGames');
+        window.GameDetails('I'm Friendly Minigames -  Русскоязычный сервер', window.location.href, 'mg_run_v2', 32, '76561197960287930', 'minigames', 50, 'ru', 'MiniGames');
         setInterval(function () {
             if (KLoad.data.files.downloaded >= KLoad.data.files.needed) KLoad.data.files.downloaded = 0;
             window.DownloadingFile('models/player/custom_skin_' + Math.floor(Math.random()*1000) + '.mdl');
