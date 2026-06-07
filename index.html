@@ -1,1081 +1,319 @@
-
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <title>metra | GmodLoad</title>
+    <title>GmodLoad | Modern UI</title>
     <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://steamcdn-a.akamaihd.net">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
     <style>
-    /*
-    * K-Load v2 (https://demo.maddela.org/k-load/).
-    *
-    * @link      https://www.maddela.org
-    * @link      https://github.com/kanalumaddela/k-load-v2
-    *
-    * @author    kanalumaddela <git@maddela.org>
-    * @copyright Copyright (c) 2018-2021 kanalumaddela
-    * @license   MIT
-    */
-
-    *, *:before, *:after {
-        -webkit-box-sizing: inherit;
-        box-sizing: inherit;
-    }
-
-    html {
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-
-    html, body {
-        width: 100%;
-        height: 100%;
-    }
-
-    body {
-        font-family: sans-serif;
-        /*color: #fff;*/
-        /*background-color: #000;*/
-    }
-
-    body:before {
-        z-index: -999999;
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    body, .no-margin {
-        margin: 0 !important;
-    }
-
-    .no-padding {
-        padding: 0 !important;
-    }
-
-    .linear-transition {
-        -webkit-transition: all 0.3s linear;
-    }
-
-    .fixed-background, .overlay, .overlay:before {
-        z-index: -99999;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-    }
-
-    .overlay:before {
-        content: '';
-    }
-
-    .overlay {
-        background-color: rgba(0, 0, 0, 0.45);
-    }
-
-    .overlay.dark {
-        background-color: rgba(0, 0, 0, 0.6);
-    }
-
-    .overlay.dots {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADAQMAAABs5if8AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAGUExURQAAAAAAAKVnuc8AAAABdFJOUwBA5thmAAAADElEQVQI12NoYAACAAKGAIH/kuy5AAAAAElFTkSuQmCC');
-    }
-
-    .overlay.vertical {
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAEklEQVQImWNgQID/TEgcBhQOABtaAQQflFz/AAAAAElFTkSuQmCC);
-    }
-
-    .overlay.horizontal {
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAEklEQVQImWNgwAUYGRgY/sM4AAkrAQG/PtYkAAAAAElFTkSuQmCC);
-    }
-
-    .overlay.diagonal-left {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAEAQMAAACTPww9AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAGUExURQAAAAAAAKVnuc8AAAABdFJOUwBA5thmAAAAEElEQVQI12MQYFBgcGBoAAACWADxfYADLwAAAABJRU5ErkJggg==');
-    }
-
-    .overlay.diagonal-right {
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAEAQMAAACTPww9AAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAGUExURQAAAAAAAKVnuc8AAAABdFJOUwBA5thmAAAAEElEQVQI12NoYHBgUGAQAAAFOADxk53MZwAAAABJRU5ErkJggg==');
-    }
-
-    .plz-hide, .hide {
-        display: none;
-    }
-
-    .fucking-hide {
-        display: none !important;
-    }
-
-    .avatar {
-        max-width: 175px;
-    }
-
-    .avatar.medium {
-        max-width: 125px;
-    }
-
-    .avatar.small {
-        max-width: 75px;
-    }
-
-    .avatar.extra.small {
-        max-width: 25px;
-    }
-
-    .avatar.circle {
-        border-radius: 50%;
-    }
-
-    .avatar.shadow {
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
-    }
-
-    .pure-center {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-    }
-
-    .pure-center.relative {
-        position: relative;
-    }
-
-    .center-text {
-        text-align: center;
-    }
-
-    .fade-in {
-        opacity: 0;
-        -webkit-animation-name: fade-in;
-        -webkit-animation-fill-mode: forwards;
-        -webkit-animation-duration: 1s;
-    }
-
-    .fade-in.long {
-        -webkit-animation-duration: 3s;
-    }
-
-    .fade-in.delay {
-        -webkit-animation-delay: .75s;
-    }
-
-    .fade-in.long.delay {
-        -webkit-animation-delay: 2s;
-    }
-
-    .messages {
-        opacity: 1;
-        -webkit-transition: opacity 1s ease;
-    }
-
-    @-webkit-keyframes fade-in {
-        from {
-            opacity: 0;
-        }
-        to {
-            opacity: 1;
-        }
-    }
-    @-webkit-keyframes fade-out {
-        from {
-            opacity: 1;
-        }
-        to {
-            opacity: 0;
-        }
-    }
-
-    .fixed {
-        position: fixed;
-    }
-
-    .fixed.top {
-        top: 0;
-    }
-
-    .fixed.bottom {
-        bottom: 0;
-    }
-
-    .fixed.left {
-        left: 0;
-    }
-
-    .fixed.right {
-        right: 0;
-    }
-
-    .fixed.vertical-center {
-        top: 50%;
-        -webkit-transform: translateY(-50%);
-    }
-
-    .fixed.horizontal-center {
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-    }
-
-    .loading-bar {
-        max-width: 100%;
-        height: 5px;
-        -webkit-transition: all 0.3s linear;
-    }
-
-    .svg-icon {
-        width: 25px;
-        height: 25px;
-    }
-
-    .svg-icon path {
-        fill: currentColor;
-    }
-
-    .k-load-staff-block, .k-load-rule-block {
-        display: none;
-        opacity: 0;
-        -webkit-transition: opacity 1s ease;
-    }
-
-    .k-load-rule-block {
-        -webkit-transition: opacity .5s ease;
-    }
-
-    .k-load-staff-block.active, .k-load-rule-block.active {
-        opacity: 1;
-    }
-    .k-load-staff-avatar {
-        font-size: 0;
-    }
-
-    #k-load-rules {
-        counter-reset: rule;
-    }
-
-    .k-load-rule {
-        counter-increment: rule;
-    }
-
-</style>
-
-            <style>
-    *, :after, :before {
-        -webkit-box-sizing: inherit;
-        box-sizing: inherit
-    }
-
-    html {
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box
-    }
-
-    body {
-        margin: 0
-    }
-
-    .container {
-        margin: auto;
-        width: 80%;
-        max-width: 1250px
-    }
-
-    .row {
-        font-size: 0
-    }
-
-    .col {
-        display: inline-block;
-        padding: 5px 15px;
-        font-size: initial
-    }
-
-    .hide, .hide-xl {
-        display: none
-    }
-
-    .col.xl-1 {
-        width: 8.3333333333%
-    }
-
-    .col.xl-2 {
-        width: 16.6666666667%
-    }
-
-    .col.xl-3 {
-        width: 25%
-    }
-
-    .col.xl-4 {
-        width: 33.3333333333%
-    }
-
-    .col.xl-5 {
-        width: 41.6666666667%
-    }
-
-    .col.xl-6 {
-        width: 50%
-    }
-
-    .col.xl-7 {
-        width: 58.3333333333%
-    }
-
-    .col.xl-8 {
-        width: 66.6666666667%
-    }
-
-    .col.xl-9 {
-        width: 75%
-    }
-
-    .col.xl-10 {
-        width: 83.3333333333%
-    }
-
-    .col.xl-11 {
-        width: 91.6666666667%
-    }
-
-    .col.xl-12 {
-        width: 100%
-    }
-</style>
-        <style>
-    @media all and (max-width: 991.98px) {
-        .hide-lg {
-            display: none
+        /* --- СОВРЕМЕННЫЙ СБРОС И БАЗОВЫЕ НАСТРОЙКИ --- */
+        *, *:before, *:after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .show-lg.col {
-            display: inline-block;
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+            overflow: hidden;
+            background-color: #0c1017;
         }
 
-        .container {
-            width: 85%
+        /* Тёмное затемнение поверх сменяющихся фонов */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: -1;
         }
 
-        .col.lg-1 {
-            width: 8.3333333333%
+        /* --- ГЛАВНАЯ СЕТКА (FLEXBOX) --- */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 3vw 4vw;
+            position: relative;
+            z-index: 10;
         }
 
-        .col.lg-2 {
-            width: 16.6666666667%
+        /* --- СТЕКЛЯННЫЕ ПАНЕЛИ (GLASSMORPHISM) --- */
+        .glass-panel {
+            background: rgba(20, 25, 35, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .col.lg-3 {
-            width: 25%
+        /* --- ШАПКА (ИНФО О СЕРВЕРЕ И ИГРОКЕ) --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .col.lg-4 {
-            width: 33.3333333333%
+        .server-info-box h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .col.lg-5 {
-            width: 41.6666666667%
+        .server-info-box p {
+            font-size: 1.1rem;
+            color: #cccccc;
+            max-width: 600px;
+            line-height: 1.5;
         }
 
-        .col.lg-6 {
-            width: 50%
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: right;
         }
 
-        .col.lg-7 {
-            width: 58.3333333333%
+        .user-details h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
         }
 
-        .col.lg-8 {
-            width: 66.6666666667%
+        .user-details span {
+            font-size: 0.9rem;
+            color: #aaaaaa;
         }
 
-        .col.lg-9 {
-            width: 75%
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
-        .col.lg-10 {
-            width: 83.3333333333%
+        /* --- ЦЕНТРАЛЬНАЯ ЧАСТЬ (ЗАГРУЗКА) --- */
+        .center-block {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
-        .col.lg-11 {
-            width: 91.6666666667%
+        .loading-status {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
         }
 
-        .col.lg-12 {
-            width: 100%
-        }
-    }
-</style>
-        <style>
-    @media all and (max-width: 565.98px) {
-
-        .hide-md {
-            display: none
-        }
-
-        .show-md.col {
-            display: inline-block;
+        /* Красивый прогресс-бар */
+        .progress-wrapper {
+            width: 100%;
+            max-width: 800px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
         }
 
-        .container {
-            width: 90%
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00c6ff 0%, #0072ff 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 15px rgba(0, 114, 255, 0.6);
         }
 
-        .col.md-1 {
-            width: 8.3333333333%
+        .progress-text {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #888;
+            font-family: monospace;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
         }
 
-        .col.md-2 {
-            width: 16.6666666667%
+        /* --- ПОДВАЛ (ИНФО О КАРТЕ, ПРАВИЛА, МУЗЫКА) --- */
+        .footer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: end;
         }
 
-        .col.md-3 {
-            width: 25%
+        .footer-card h2 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            color: #00c6ff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .col.md-4 {
-            width: 33.3333333333%
+        .footer-card svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
-        .col.md-5 {
-            width: 41.6666666667%
+        .map-info p, .gamemode, .max-players {
+            font-size: 1.2rem;
+            font-weight: 500;
         }
 
-        .col.md-6 {
-            width: 50%
+        .current-song {
+            font-weight: bold;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .col.md-7 {
-            width: 58.3333333333%
+        /* Стили для сменяющихся правил (JS) */
+        #k-load-rules { min-height: 80px; }
+        .k-load-rule-block { display: none; opacity: 0; transition: opacity 0.5s; }
+        .k-load-rule-block.active { display: block; opacity: 1; }
+        .k-load-rule { margin-bottom: 5px; font-size: 0.95rem; color: #ddd; }
+        .k-load-rule::before { content: "» "; color: #00c6ff; font-weight: bold; }
+
+        /* Стили для сообщений (JS) */
+        .messages { font-size: 1.2rem; font-style: italic; transition: opacity 0.5s; }
+
+        /* Иконка загрузки */
+        .spinner {
+            animation: spin 2s linear infinite;
         }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        .col.md-8 {
-            width: 66.6666666667%
+        /* АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ */
+        @media (max-width: 900px) {
+            .app-container { padding: 20px; }
+            .header { flex-direction: column-reverse; align-items: center; text-align: center; }
+            .user-profile { text-align: center; flex-direction: column; }
+            .server-info-box p { display: none; /* Прячем длинное описание на малых экранах */ }
+            .footer { grid-template-columns: 1fr; }
         }
-
-        .col.md-9 {
-            width: 75%
-        }
-
-        .col.md-10 {
-            width: 83.3333333333%
-        }
-
-        .col.md-11 {
-            width: 91.6666666667%
-        }
-
-        .col.md-12 {
-            width: 100%
-        }
-    }
-</style>
-        <style>
-    @media all and (max-width: 555.98px) {
-        .hide-sm {
-            display: none
-        }
-
-        .show-sm.col {
-            display: inline-block;
-        }
-
-        .container {
-            width: 95%
-        }
-
-        .col.sm-1 {
-            width: 8.3333333333%
-        }
-
-        .col.sm-2 {
-            width: 16.6666666667%
-        }
-
-        .col.sm-3 {
-            width: 25%
-        }
-
-        .col.sm-4 {
-            width: 33.3333333333%
-        }
-
-        .col.sm-5 {
-            width: 41.6666666667%
-        }
-
-        .col.sm-6 {
-            width: 50%
-        }
-
-        .col.sm-7 {
-            width: 58.3333333333%
-        }
-
-        .col.sm-8 {
-            width: 66.6666666667%
-        }
-
-        .col.sm-9 {
-            width: 75%
-        }
-
-        .col.sm-10 {
-            width: 83.3333333333%
-        }
-
-        .col.sm-11 {
-            width: 91.6666666667%
-        }
-
-        .col.sm-12 {
-            width: 100%
-        }
-    }
-</style>
-        <style>
-    @media all and (max-width: 459.98px) {
-        .hide-xs {
-            display: none
-        }
-
-        .show-xd.col {
-            display: inline-block;
-        }
-
-        .col.xs-1 {
-            width: 8.3333333333%
-        }
-
-        .col.xs-2 {
-            width: 16.6666666667%
-        }
-
-        .col.xs-3 {
-            width: 25%
-        }
-
-        .col.xs-4 {
-            width: 33.3333333333%
-        }
-
-        .col.xs-5 {
-            width: 41.6666666667%
-        }
-
-        .col.xs-6 {
-            width: 50%
-        }
-
-        .col.xs-7 {
-            width: 58.3333333333%
-        }
-
-        .col.xs-8 {
-            width: 66.6666666667%
-        }
-
-        .col.xs-9 {
-            width: 75%
-        }
-
-        .col.xs-10 {
-            width: 83.3333333333%
-        }
-
-        .col.xs-11 {
-            width: 91.6666666667%
-        }
-
-        .col.xs-12 {
-            width: 100%
-        }
-    }
-</style>
-        <style>
-    /*
- * K-Load v2 (https://demo.maddela.org/k-load/).
- *
- * @link      https://www.maddela.org
- * @link      https://github.com/kanalumaddela/k-load-v2
- *
- * @author    kanalumaddela <git@maddela.org>
- * @copyright Copyright (c) 2018-2019 Maddela
- * @license   MIT
- */
-
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        color: #fff;
-        background-color: #0c223e;
-    }
-
-    h1, h2, h2, h4, h5, h6, p {
-        margin: 0;
-    }
-
-    .pure-center {
-        width: 95%;
-        max-width: 1300px;
-    }
-
-    .text-left {
-        text-align: left;
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .text-right {
-        text-align: right;
-    }
-
-    .no-padding {
-        padding: 0;
-    }
-
-    .user-bar > * {
-        display: inline-block;
-        vertical-align: middle;
-    }
-
-    .avatar {
-        border-radius: 3px;
-    }
-
-    .svg-icon-container {
-        margin-top: 10px;
-    }
-
-    .svg-icon {
-        margin-bottom: -8px;
-    }
-
-    .svg-icon path {
-        fill: #fff;
-    }
-
-    .col {
-        padding: 8px;
-        vertical-align: bottom;
-    }
-
-    .card {
-        padding: 20px;
-        height: 200px;
-        background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    .card > h2, .card.download > div > h2 {
-        font-weight: 400;
-    }
-
-    .card > div {
-        position: relative;
-    }
-
-    .card.blue {
-        background-color: #22adf8;
-        background: -webkit-linear-gradient(0deg, #2196F3, #23ccff);
-        background: linear-gradient(90deg, #2196F3, #23ccff);
-    }
-
-    .card.dark-blue {
-        background-color: #2551cd;
-        background: -webkit-linear-gradient(0deg, #1f65b9, #2b5de0);
-        background: linear-gradient(90deg, #1f65b9, #2b5de0);
-    }
-
-    .card.green {
-        background-color: #2eb532;
-        background: -webkit-linear-gradient(0deg, #1f9022, #2eb532);
-        background: linear-gradient(90deg, #1f9022, #2eb532);
-    }
-
-    .card.orange {
-        background-color: #dc562e;
-        background: -webkit-linear-gradient(0deg, #d24526, #ea643c);
-        background: linear-gradient(90deg, #d24526, #ea643c);
-    }
-
-    .card.magneta {
-        background-color: #a5193c;
-        background: -webkit-linear-gradient(0deg, #881330, #bf1f46);
-        background: linear-gradient(90deg, #881330, #bf1f46);
-    }
-
-    .card.purple {
-        background-color: #9c4696;
-        background: -webkit-linear-gradient(0deg, #80395b, #9c4696);
-        background: linear-gradient(90deg, #80395b, #9c4696);
-    }
-
-    .youtube-playing-title {
-        margin-top: 25px;
-        margin-bottom: 5px;
-        padding-bottom: 5px;
-        font-weight: bold;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .loading-bar {
-        position: absolute;
-        right: 0;
-        margin: 15px 0;
-        height: 15px;
-        background-color: #fff;
-        transition: width 0.25s linear;
-    }
-
-    #k-load-rules, #k-load-staff {
-        margin-top: 12px;
-    }
-
-    .k-load-rule:not(:last-child) {
-        margin-bottom: 2px;
-    }
-
-    .k-load-rule:before {
-        position: relative;
-        font-family: sans-serif;
-        content: '\25CF';
-        margin-right: 4px;
-        top: -1px;
-    }
-
-    .k-load-staff-block {
-        text-align: center;
-    }
-
-    .k-load-staff {
-        display: inline-block;
-        width: 50%;
-        font-size: 0;
-        text-align: center;
-    }
-
-    .k-load-staff-info {
-        margin-top: 8px;
-    }
-
-    .k-load-staff-info > span {
-        display: block;
-    }
-
-    .k-load-staff--name {
-        font-size: 1rem;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    .k-load-staff--rank {
-        font-size: .8rem;
-    }
-
-    .spinner {
-        -webkit-animation: spinner 2s infinite linear;
-    }
-
-    @-webkit-keyframes spinner {
-        0% {-webkit-transform: rotate(0deg)}
-        0% {-webkit-transform: rotate(-360deg)}
-    }
-</style>
-
-        <style>
-            body:before {
-                background-image: url(https://cdn.gmodload.com/assets/img/backgrounds/global/particles_blue.jpg);
-            }
-
-                    </style>
-    
-    <style>
-        
-                    .bg-primary-50{background-color: rgb(246,250,254);}.text-primary-50{color: rgb(246,250,254);}.bg-primary-100{background-color: rgb(236,244,254);}.text-primary-100{color: rgb(236,244,254);}.bg-primary-200{background-color: rgb(208,228,251);}.text-primary-200{color: rgb(208,228,251);}.bg-primary-300{background-color: rgb(179,212,249);}.text-primary-300{color: rgb(179,212,249);}.bg-primary-400{background-color: rgb(122,179,245);}.text-primary-400{color: rgb(122,179,245);}.bg-primary-500{background-color: rgb(65,147,240);}.text-primary-500{color: rgb(65,147,240);}.bg-primary-600{background-color: rgb(59,132,216);}.text-primary-600{color: rgb(59,132,216);}.bg-primary-700{background-color: rgb(49,110,180);}.text-primary-700{color: rgb(49,110,180);}.bg-primary-800{background-color: rgb(39,88,144);}.text-primary-800{color: rgb(39,88,144);}.bg-primary-900{background-color: rgb(32,72,118);}.text-primary-900{color: rgb(32,72,118);}
-        
-        
-            </style>
+    </style>
 </head>
-<body class="">
+<body>
 
-<div class="overlay " style="background-color: rgba(0,0,0,.3)"></div>
+<div class="overlay"></div>
 
-    <div class="pure-center">
-        <div class="row">
-            <div class="col xl-12 user-bar" style="text-align:right;">
-                <div style="margin-right: 10px">
-                    <p style="margin-bottom: 4px;font-size: 1.35rem;">Rabscuttle</p>
-                    <p style="font-size: .85rem;font-weight: 300;">76561197960287930</p>
-                </div>
-                <img class="avatar" src="https://images.weserv.nl/?url=https://avatars.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg"
-                     style="max-width:75px;" alt="">
+<div class="app-container">
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+    <header class="header">
+        <div class="server-info-box glass-panel">
+            <h1 class="server-name">Загрузка сервера...</h1>
+            <p>🎮 MiniGames — место, где собраны лучшие мини-игры Garry's Mod! Устал от однообразных режимов? Добро пожаловать на ClassiX MiniGames!</p>
+        </div>
+        
+        <div class="user-profile glass-panel">
+            <div class="user-details">
+                <h3>Rabscuttle</h3>
+                <span>76561197960287930</span>
             </div>
-            <div class="col xl-3 hide-md">
-                <div class="card server-info blue">
-                    <h2 style="display: inline-block">
-                        <svg class="svg-icon" style="width: 30px !important;height: 30px !important;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M192 64C86 64 0 150 0 256S86 448 192 448H448c106 0 192-86 192-192s-86-192-192-192H192zM496 248c-22.1 0-40-17.9-40-40s17.9-40 40-40s40 17.9 40 40s-17.9 40-40 40zm-24 56c0 22.1-17.9 40-40 40s-40-17.9-40-40s17.9-40 40-40s40 17.9 40 40zM168 200c0-13.3 10.7-24 24-24s24 10.7 24 24v32h32c13.3 0 24 10.7 24 24s-10.7 24-24 24H216v32c0 13.3-10.7 24-24 24s-24-10.7-24-24V280H136c-13.3 0-24-10.7-24-24s10.7-24 24-24h32V200z"/></svg>
-                        <span>gamemode</span>
-                    </h2>
-                    <p class="gamemode" style="font-size: 1.2rem;padding-top: 0.35rem"></p>
-                    <br>
-                    <h2>
-                        <svg class="svg-icon " style="margin-bottom: -4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg>
-                        max players
-                    </h2>
-                    <p class="max-players" style="font-size: 1.2rem;"></p>
-                </div>
-            </div>
-            <div class="col xl-3 md-6">
-                <div class="card map-info"
-                     style="background: -webkit-linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25) ), url('https://images.weserv.nl/?url=https://image.gametracker.com/images/maps/160x120/garrysmod/gm_construct.jpg');background-repeat: no-repeat;background-position: center;background-size: cover;">
-                    <h2>
-                        <svg class="svg-icon " style="margin-bottom: -5px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M384 476.1L192 421.2V35.9L384 90.8V476.1zm32-1.2V88.4L543.1 37.5c15.8-6.3 32.9 5.3 32.9 22.3V394.6c0 9.8-6 18.6-15.1 22.3L416 474.8zM15.1 95.1L160 37.2V423.6L32.9 474.5C17.1 480.8 0 469.2 0 452.2V117.4c0-9.8 6-18.6 15.1-22.3z"/></svg>
-                        map
-                    </h2>
-                    <p class="map"></p>
-                </div>
-            </div>
-            <div class="col xl-6 hide-md">
-                <div class="card news orange">
-                    <h2>
-                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 0C28.7 0 0 28.7 0 64V352c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64z"/></svg>
-                        <span>messages</span>
-                    </h2>
-                    <p class="messages" style="margin-top: 25px;font-size: 1.5rem;"></p>
-                </div>
-            </div>
-            <div class="col xl-6 md-12 hide-lg">
-                <div class="card rules dark-blue">
-                    <h2>
-                        <svg class="svg-icon " style="margin-bottom: -4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M318.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-120 120c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l4-4L325.4 293.4l-4 4c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l120-120c12.5-12.5 12.5-32.8 0-45.3l-16-16c-12.5-12.5-32.8-12.5-45.3 0l-4 4L330.6 74.6l4-4c12.5-12.5 12.5-32.8 0-45.3l-16-16zm-152 288c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l48 48c12.5 12.5 32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-1.4-1.4L272 285.3 226.7 240 168 298.7l-1.4-1.4z"/></svg>
-                        rules
-                    </h2>
-                    <div id="k-load-rules"></div>
-                </div>
-            </div>
-            <div class="col xl-3 hide-lg">
-                <div class="card staff magneta">
-                    <h2>
-                        <svg class="svg-icon " style="margin-bottom: -4px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg>
-                        staff
-                    </h2>
-                    <div id="k-load-staff"></div>
-                </div>
-            </div>
-            <div class="col xl-3 md-6 hide-lg show-md">
-                <div class="card music green">
-                    <h2>
-                        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7v72V368c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V147L192 223.8V432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V200 128c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z"/></svg>
-                        <span>music</span>
-                    </h2>
-                    <p class="youtube-playing-title current-song">Nothing playing...</p>
-                    <p class="youtube-playing-author"></p>
-                </div>
-            </div>
-            <div class="col xl-6 hide-md">
-                <div class="card server green">
-                    <h2>
-                        <svg class="svg-icon" width="20" height="20" style="margin-bottom: -5px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M64 32C28.7 32 0 60.7 0 96v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm48 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM64 288c-35.3 0-64 28.7-64 64v64c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V352c0-35.3-28.7-64-64-64H64zm280 72a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm56 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/></svg>
-                        <span class="server-name"></span>
-                    </h2>
-                    <p style="font-size:1.2rem;padding-top: 0.35rem">🎮MiniGames — место, где собраны лучшие мини-игры Garry&#039;s Mod!
+            <img class="avatar" src="https://avatars.steamstatic.com/c5d56249ee5d28a07db4ac9f7f60af961fab5426_full.jpg" alt="Avatar">
+        </div>
+    </header>
 
-Устал от однообразных режимов? Добро пожаловать на ClassiX MiniGames — сервер, где каждый раунд дарит новые эмоции и испытания. Здесь тебя ждут десятки разнообразных мини-игр</p>
-                </div>
-            </div>
-            <div class="col xl-6 md-12">
-                <div class="card download purple text-right">
-                    <div>
-                        <h2 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                            <svg class="svg-icon spinner" style="margin-bottom: -5px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg>
+    <!-- ЦЕНТРАЛЬНАЯ ПАНЕЛЬ (ПРОГРЕСС ЗАГРУЗКИ) -->
+    <main class="center-block">
+        <div class="loading-status">
+            <svg class="spinner" width="24" height="24" style="vertical-align: middle; margin-right: 10px; fill: #00c6ff;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg>
+            <span class="status">Получение информации о сервере...</span>
+        </div>
+        
+        <div class="progress-wrapper">
+            <div class="loading-bar"></div>
+        </div>
+        
+        <div class="progress-text">
+            <span class="files-downloading">Подготовка...</span>
+            <span class="percentage">0%</span>
+        </div>
+    </main>
 
-                            <span class="status">Retrieving server info...</span>
-                        </h2>
-                        <p>progress [ <span class="percentage"></span> ]</p>
-                        <div class="loading-bar"></div>
-                    </div>
-                </div>
+    <!-- НИЖНЯЯ ПАНЕЛЬ -->
+    <footer class="footer">
+        <div class="footer-card glass-panel">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M384 476.1L192 421.2V35.9L384 90.8V476.1zm32-1.2V88.4L543.1 37.5c15.8-6.3 32.9 5.3 32.9 22.3V394.6c0 9.8-6 18.6-15.1 22.3L416 474.8zM15.1 95.1L160 37.2V423.6L32.9 474.5C17.1 480.8 0 469.2 0 452.2V117.4c0-9.8 6-18.6 15.1-22.3z"/></svg>
+                Информация
+            </h2>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="color:#aaa">Карта:</span> <span class="map">gm_construct</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                <span style="color:#aaa">Режим:</span> <span class="gamemode">Sandbox</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color:#aaa">Игроки:</span> <span class="max-players">0</span>
             </div>
         </div>
-    </div>
+
+        <div class="footer-card glass-panel">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M318.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-120 120c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l4-4L325.4 293.4l-4 4c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l120-120c12.5-12.5 12.5-32.8 0-45.3l-16-16c-12.5-12.5-32.8-12.5-45.3 0l-4 4L330.6 74.6l4-4c12.5-12.5 12.5-32.8 0-45.3l-16-16zm-152 288c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l48 48c12.5 12.5 32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-1.4-1.4L272 285.3 226.7 240 168 298.7l-1.4-1.4z"/></svg>
+                Правила
+            </h2>
+            <div id="k-load-rules">Загрузка правил...</div>
+        </div>
+
+        <div class="footer-card glass-panel">
+            <h2>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7v72V368c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V147L192 223.8V432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6V200 128c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z"/></svg>
+                Музыка
+            </h2>
+            <p class="current-song">Ожидание музыки...</p>
+            <div class="messages" style="margin-top: 15px; color:#00c6ff; font-size: 0.95rem;"></div>
+        </div>
+    </footer>
+</div>
+
+<!-- ========================================== -->
+<!-- НИЖЕ ИДЕТ ОРИГИНАЛЬНЫЙ JAVASCRIPT ЛОГИКИ   -->
+<!-- ========================================== -->
 <script type="text/javascript">
-    window.globalConfig = JSON.parse('{\u0022backgrounds\u0022:{\u0022random\u0022:true,\u0022fade\u0022:1000,\u0022duration\u0022:5000},\u0022messages\u0022:{\u0022random\u0022:true,\u0022fade\u0022:1000,\u0022duration\u0022:5000},\u0022staff\u0022:{\u0022duration\u0022:6000,\u0022perPage\u0022:1},\u0022rules\u0022:{\u0022perPage\u0022:4,\u0022fade\u0022:500,\u0022duration\u0022:8000},\u0022music\u0022:{\u0022volume\u0022:10}}');
+    window.globalConfig = JSON.parse('{\u0022backgrounds\u0022:{\u0022random\u0022:true,\u0022fade\u0022:1000,\u0022duration\u0022:5000},\u0022messages\u0022:{\u0022random\u0022:true,\u0022fade\u0022:1000,\u0022duration\u0022:5000},\u0022staff\u0022:{\u0022duration\u0022:6000,\u0022perPage\u0022:1},\u0022rules\u0022:{\u0022perPage\u0022:3,\u0022fade\u0022:500,\u0022duration\u0022:8000},\u0022music\u0022:{\u0022volume\u0022:10}}');
 
     window.backgrounds = JSON.parse('[\u0022https:\\\/\\\/cdn.gmodload.com\\\/51635\\\/RCplLaQ1RIjVTF4tAVWL1i8C5L1qhD-meta0LfQsNCz0YDRg9C30LrQsC5qcGc=-.jpg\u0022,\u0022https:\\\/\\\/cdn.gmodload.com\\\/51638\\\/wQScJbO8gN3qj3qWVw0hSBxRaVKajo-meta0LfQsNCz0YDRg9C30LrQsCAoMSkuanBn-.jpg\u0022,\u0022https:\\\/\\\/cdn.gmodload.com\\\/51641\\\/j4PtZJeMkxFREs8puzC6NpBYAZQPio-meta0LfQsNCz0YDRg9C30LouanBn-.jpg\u0022,\u0022https:\\\/\\\/cdn.gmodload.com\\\/51644\\\/dD2spZNMIXSKvZ8L8QGXuS11HXf6Pi-meta0LfQsNCz0YDRg9C30LrQsCAoMikuanBn-.jpg\u0022]');
 
-    window.messages = JSON.parse('[{\u0022message\u0022:\u0022222241\u0022}]');
+    window.messages = JSON.parse('[{\u0022message\u0022:\u0022Добро пожаловать!\u0022}, {\u0022message\u0022:\u0022Загружаем контент...\u0022}]');
 
     window.staff = [];
-
-    window.rules = [];
-
+    window.rules = [
+        {rule: "Запрещено использование читов"},
+        {rule: "Уважайте других игроков"},
+        {rule: "Не спамьте в микрофон"},
+        {rule: "Соблюдайте правила режима"},
+        {rule: "Администрация всегда права"}
+    ];
     window.music = [];
 </script>
 
-        <script type="text/javascript">
-            window.globalConfig.staff.perPage = 2;
-            window.globalConfig.rules.perPage = 4;
-        </script>
-    
-<script type="text/javascript">
-    var currentProgress, demoInterval;
-
-    const gamemodes = {
-        cinema: 'Cinema',
-        demo: 'Demo',
-        darkrp: 'DarkRP',
-        deathrun: 'Deathrun',
-        jailbreak: 'Jailbreak',
-        melonbomber: 'Melon Bomber',
-        militaryrp: 'MilitaryRP',
-        murder: 'Murder',
-        morbus: 'Morbus',
-        policerp: 'PoliceRP',
-        prophunt: 'Prophunt',
-        sandbox: 'Sandbox',
-        santosrp: 'SantosRP',
-        schoolrp: 'SchoolRP',
-        starwarsrp: 'SWRP',
-        stopitslender: 'Stop it Slender',
-        slashers: 'Slashers',
-        terrortown: 'TTT',
-    };
-
-    const elem = function (tag, attrs, children) {
-        const elem = document.createElement(tag);
-
-        Object.keys(attrs).forEach(function (key) {
-            if (key in document.createElement(tag)) {
-                elem[key] = attrs[key];
-            } else {
-                elem.setAttribute(key, attrs[key]);
-            }
-        });
-
-        if (Array.isArray(children)) {
-            children.forEach(function (child) {
-                if (typeof child === "string") {
-                    child = document.createTextNode(child);
-                }
-                elem.appendChild(child);
-            });
-        }
-
-        return elem;
-    };
-
-    const clearChildren = function (parent) {
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
-        }
-    };
-
-    /**
-     * Generate a random string.
-     *
-     * @returns {string}
-     */
-    const str_random = function () {
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    };
-
-    /**
-     * {@link https://stackoverflow.com/a/1349426}
-     *
-     * @param length
-     * @returns {string}
-     */
-    const str_random_v2 = function (length) {
-        var text = "";
-        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-        if (!length) {
-            length = 12;
-        }
-
-        for (var i = 0; i < length; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-        }
-
-        return text;
-    };
-
-    /**
-     * Return a NodeList matching the given selector.
-     *
-     * @param {string} selector
-     * @returns {NodeListOf<Element>}
-     */
-    const getElements = function (selector) {
-        return document.querySelectorAll(selector);
-    };
-
-    const randColor = function () {
-        return "#" + ((1 << 24) * Math.random() | 0).toString(16);
-    };
-
-    const shuffle = function (array) {
-        var i, j = 0, temp = null;
-
-        for (i = array.length - 1; i > 0; i -= 1) {
-            j = Math.floor(Math.random() * (i + 1));
-            temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-    };
-
-    const text = function (selector, text) {
-        [].forEach.call(getElements(selector), function (elem) {
-            elem.textContent = text;
-        });
-    };
-
-    const width = function (selector, width) {
-        [].forEach.call(getElements(selector), function (elem) {
-            elem.style.width = width;
-        });
-    };
-
-    const image = function (selector, src) {
-        [].forEach.call(getElements(selector), function (elem) {
-            elem.src = src;
-        });
-    };
-
-    const clamp = function (num, min, max) {
-        if (!min && !max) {
-            console.error('clamp() min and max not defined!');
-            return;
-        }
-
-        if (!max) {
-            max = Infinity;
-        }
-        if (!min) {
-            min = -Infinity;
-        }
-
-        return Math.min(Math.max(num, min), max);
-    };
-
-    const rgbToRgba = function (rgb, alpha) {
-        return rgb.replace('rgb', 'rgba').replace(')', ','+alpha+')');
-    };
-</script>
 <script type="text/javascript">
     var KLoad = {
         isGmod: navigator.userAgent.toLowerCase().indexOf('valve') !== -1,
@@ -1085,84 +323,36 @@
             demoMode: false,
             volume: 15,
             GameDetails: {},
-            files: {
-                downloaded: 0,
-                needed: 1,
-                total: 1,
-                downloadComplete: false,
-            },
+            files: { downloaded: 0, needed: 1, total: 1, downloadComplete: false },
         },
-        finishedStatuses: [
-            'Sending client info...',
-            'Client info sent!',
-            'Received all Lua files we needed!',
-            'No files to request!',
-            'Starting Lua...',
-        ],
-        tmp: {
-            ignoreLoadings: false,
-            lastFileDownloaded: null,
-            statuses: [],
-            progressRegex: /(\d+)\/(\d+)/,
-        }
+        finishedStatuses: [ 'Sending client info...', 'Client info sent!', 'Received all Lua files we needed!', 'No files to request!', 'Starting Lua...' ],
+        tmp: { ignoreLoadings: false, lastFileDownloaded: null, statuses: [], progressRegex: /(\d+)\/(\d+)/ }
     };
-
 
     KLoad.emit = function (event) {
         if (typeof KLoad.events[event] !== 'undefined') {
-            const args = [].slice.call(arguments);
-            args.shift();
-
-            KLoad.events[event].forEach(function (func) {
-                func.apply(null, args);
-            });
+            const args = [].slice.call(arguments); args.shift();
+            KLoad.events[event].forEach(function (func) { func.apply(null, args); });
         }
     };
-
     KLoad.on = function (event, func) {
-        if (typeof KLoad.events[event] === 'undefined') {
-            KLoad.events[event] = [];
-        }
-
+        if (typeof KLoad.events[event] === 'undefined') { KLoad.events[event] = []; }
         KLoad.events[event].push(func);
     };
 
+    const text = function (selector, textStr) {
+        [].forEach.call(document.querySelectorAll(selector), function (elem) { elem.textContent = textStr; });
+    };
+
     KLoad.on('GameDetails', function (servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language, gamemodeNice) {
-        KLoad.data.GameDetails.servername = servername;
-        KLoad.data.GameDetails.serverurl = serverurl;
-        KLoad.data.GameDetails.mapname = mapname;
-        KLoad.data.GameDetails.maxplayers = maxplayers;
-        KLoad.data.GameDetails.steamid = steamid;
-        KLoad.data.GameDetails.gamemode = gamemode;
-        KLoad.data.GameDetails.volume = volume;
-        KLoad.data.GameDetails.language = language;
-        KLoad.data.GameDetails.gamemodeNice = gamemodeNice;
-
         text('.server-name', servername);
-        text('.server-url', serverurl);
         text('.map', mapname);
-        text('.mapname', mapname);
         text('.max-players', maxplayers);
-        text('.steamid', steamid);
-        text('.gamemode', gamemode);
-        text('.volume', volume);
-        text('.language', language);
-        text('.gamemodeNice', gamemodeNice);
-    });
-
-    KLoad.on('SetFilesTotal', function (total) {
-        KLoad.data.files.total = total;
-        text('.files-total', total);
-    });
-
-    KLoad.on('SetFilesNeeded', function (needed) {
-        KLoad.data.files.needed = needed;
-        text('.files-needed', needed);
+        text('.gamemode', gamemodeNice || gamemode);
     });
 
     KLoad.getProgress = function () {
         const progress = KLoad.data.files.downloaded / KLoad.data.files.needed;
-
         return {
             progress: KLoad.data.files.downloadComplete ? 1 : progress,
             percentage: KLoad.data.files.downloadComplete ? 100 : Math.round(progress * 100)
@@ -1171,542 +361,129 @@
 
     KLoad.on('DownloadingFile', function (file) {
         KLoad.data.files.downloaded++;
-
         if ((KLoad.data.files.needed <= 0 || KLoad.data.files.downloaded >= KLoad.data.files.needed) && !KLoad.data.demoMode) {
             SetFilesNeeded(KLoad.data.files.downloaded + 1);
         }
-
         KLoad.tmp.lastFileDownloaded = file;
-
-        SetStatusChanged('Downloading ' + file);
+        text('.status', 'Скачивание ' + file);
         text('.files-downloading', file);
-
-        if (!KLoad.data.files.downloadComplete) {
-            KLoad.emit('DownloadProgress', KLoad.getProgress());
-        }
+        if (!KLoad.data.files.downloadComplete) { KLoad.emit('DownloadProgress', KLoad.getProgress()); }
     });
 
     KLoad.on('DownloadProgress', function (data) {
-        text('.files-downloaded', KLoad.data.files.downloaded);
         text('.percentage', data.percentage + '%');
-
-        [].forEach.call(document.querySelectorAll('.loading-bar, .loading-bar--vertical'), function (elem) {
-            if (elem.classList.contains('.loading-bar--vertical')) {
-                elem.style.height = data.percentage + '%';
-            } else {
-                elem.style.width = data.percentage + '%';
-            }
+        [].forEach.call(document.querySelectorAll('.loading-bar'), function (elem) {
+            elem.style.width = data.percentage + '%';
         });
     });
 
     KLoad.on('SetStatusChanged', function (status) {
-        if (status.indexOf('Extracting') !== -1 || status.indexOf('Retrieving') !== -1) {
-            return;
-        }
-
-        const i = status.indexOf('Loading');
-        if (i !== -1) {
-            if (status.indexOf(KLoad.tmp.lastFileDownloaded) === -1) {
-                KLoad.data.files.downloaded++;
-                KLoad.emit('DownloadProgress', KLoad.getProgress());
-            }
-
-            status = status.substr(i);
-        }
-
+        if (status.indexOf('Extracting') !== -1 || status.indexOf('Retrieving') !== -1) return;
         text('.status', status);
-
         if (KLoad.finishedStatuses.indexOf(status) !== -1) {
             KLoad.data.files.downloadComplete = true;
-
-            KLoad.emit('DownloadProgress', {
-                progress: 1,
-                percentage: 100
-            });
+            KLoad.emit('DownloadProgress', { progress: 1, percentage: 100 });
         }
     });
 
     KLoad.init = function () {
-        window.GameDetails = function (servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language) {
-            KLoad.emit('GameDetails', servername, serverurl, mapname, maxplayers, steamid, gamemode, volume, language)
-        };
-
-        window.SetFilesTotal = function (total) {
-            KLoad.emit('SetFilesTotal', total);
-        };
-
-        window.SetFilesNeeded = function (needed) {
-            KLoad.emit('SetFilesNeeded', needed);
-        };
-
-        window.DownloadingFile = function (fileName) {
-            KLoad.emit('DownloadingFile', fileName);
-        };
-
-        window.SetStatusChanged = function (status) {
-            KLoad.emit('SetStatusChanged', status);
-        };
+        window.GameDetails = function (s, u, m, mp, st, g, v, l, gn) { KLoad.emit('GameDetails', s, u, m, mp, st, g, v, l, gn) };
+        window.SetFilesTotal = function (t) { KLoad.data.files.total = t; };
+        window.SetFilesNeeded = function (n) { KLoad.data.files.needed = n; };
+        window.DownloadingFile = function (f) { KLoad.emit('DownloadingFile', f); };
+        window.SetStatusChanged = function (s) { KLoad.emit('SetStatusChanged', s); };
     };
 
-    // shuffle before anything is called
-    shuffle(window.backgrounds)
-    shuffle(window.messages)
-    shuffle(window.music)
-
-    function onMessageContainers(callback) {
-        [].forEach.call(document.querySelectorAll('.messages'), callback);
-    }
-
-    var message_counter = 0;
-    if(messages[message_counter]) {
-        text('.messages', messages[message_counter].message);
-
-        var message_rotation = setInterval(function() {
-            message_counter++;
-            if (message_counter >= messages.length) {
-                message_counter = 0;
-            }
-
-            onMessageContainers(function (el) {
-                el.style.opacity = '0';
-
-                setTimeout(function () {
-                    onMessageContainers(function (el) {
-                        el.innerText = messages[message_counter].message;
-                        el.style.opacity = '1';
-                    })
-                }, 1000);
-            });
-        }, window.globalConfig.messages.duration + 500);
-    }
-
-    var gmodload = {};
+    // Фоны
     KLoad.Backgrounds = {
-        init: function (backgrounds, options) {
-            this.setBackgrounds(backgrounds);
-            this.setOptions(options);
-            this.setupCss();
-            this.setupContainer();
-            this.data = {
-                currentIndex: -1,
-                backgroundChildren: 0,
-                activeBackgrounds: [],
-                timer: null,
-            }
-
-            if (backgrounds && backgrounds.length) {
-                this.start();
-            }
-
-            return this;
+        init: function (bgs) {
+            this.bgs = bgs;
+            this.container = document.createElement('div');
+            this.container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background-color:#000;';
+            document.body.prepend(this.container);
+            this.index = 0;
+            this.start();
         },
-
         start: function () {
-            [].forEach.call(this.backgrounds, function (url) {
-                this.container.appendChild(this.createBackground(url))
-            }.bind(this));
-
-            this.data.activeBackgrounds = this.backgrounds;
-            this.data.backgroundChildren = this.container.querySelectorAll('.bg-item');
-
-            this.nextBackground();
-
-            if (this.data.activeBackgrounds.length > 1) {
-                this.data.timer = setInterval(function () {
-                    this.nextBackground();
-                }.bind(this), this.options.duration);
-            }
-        },
-
-        nextBackground: function () {
-            this.data.currentIndex++;
-
-            if (this.data.currentIndex >= this.data.activeBackgrounds.length) {
-                this.data.currentIndex = 0;
-            }
-
-            const indx = this.data.currentIndex;
-
-            this.data.backgroundChildren[indx].style.opacity = '1';
-
-            if (this.data.activeBackgrounds.length > 1) {
-                if (indx === 0) {
-                    this.data.backgroundChildren[this.data.activeBackgrounds.length-1].style.opacity = '0';
-                } else {
-                    this.data.backgroundChildren[indx-1].style.opacity = '0';
-                }
-            }
-
-            return this;
-        },
-
-        setupContainer: function () {
-            this.container = document.querySelector('.k-load-background-container');
-
-            if (!this.container) {
-                window.document.body.innerHTML += '<div class="k-load-background-container"></div>';
-                this.container = document.querySelector('.k-load-background-container');
-            }
-
-            return this;
-        },
-
-        setupCss: function () {
-            window.document.body.innerHTML += '<style>body > .k-load-background-container {z-index: -999999;pointer-events: none;position: fixed;top: 50%;left: 50%;width: 110%;height: 110%;-webkit-transform: translate(-50%, -50%)}.k-load-background-container > .bg-item {z-index: -9998;position: absolute;width: 100%;height: 100%;background-size: cover;background-position: center;opacity: 0;-webkit-transition: opacity '+(Math.round(this.options.fade/1000*100)/100)+'s ease-in;}</style>';
-
-            return this;
-        },
-
-        setBackgrounds: function (backgrounds) {
-            if (!backgrounds) {
-                backgrounds = [];
-            }
-
-            this.backgrounds = backgrounds;
-
-            return this;
-        },
-
-        getBackgrounds: function () {
-            return this.backgrounds;
-        },
-
-        createBackground: function (imageUrl) {
-            const div = document.createElement('div');
-
-            div.className = 'bg-item';
-            div.style.backgroundImage = 'url('+imageUrl+')';
-
-            return div;
-        },
-
-        setOptions: function (options) {
-            if (!options) {
-                options = {};
-            }
-
-            this.options = {
-                random:  options.hasOwnProperty('random') ? options.random : true,
-                fade:  options.hasOwnProperty('fade') ? options.fade : 750,
-                duration:  options.hasOwnProperty('duration') ? options.duration : 5*1000,
-            }
-
-            return this;
-        },
-
-        getOptions: function () {
-            return this.options;
-        }
-    }
-
-    KLoad.Music = {
-        init: function (music, volume) {
-            if (!volume) {
-                volume = 0;
-            }
-
-            this.data = {
-                currentIndex: -1,
-                currentlyPlaying: null,
-                songs: [],
-                songNames: [],
-            };
-
-            this.setVolume(volume);
-            this.setMusic(music);
-
-            if (this.data.songs.length) {
-                this.start();
-            }
-
-            return this;
-        },
-
-        start: function () {
-            [].forEach.call(document.querySelectorAll('.music-container'), function (el) {
-                el.style.display = 'block';
+            if(this.bgs.length === 0) return;
+            this.bgs.forEach((url, i) => {
+                let div = document.createElement('div');
+                div.style.cssText = `position:absolute;width:100%;height:100%;background:url(${url}) center/cover;opacity:0;transition:opacity 1s ease-in-out;`;
+                this.container.appendChild(div);
             });
-            this.nextSong();
-            KLoad.emit('MusicStarted');
+            this.next();
+            if(this.bgs.length > 1) setInterval(() => this.next(), 6000);
         },
-
-        nextSong: function () {
-            this.data.currentIndex++;
-
-            if (this.data.currentIndex >= this.data.songs.length) {
-                this.data.currentIndex = 0;
-            }
-
-            if (this.data.currentlyPlaying) {
-                this.data.currentlyPlaying.pause();
-                this.data.currentlyPlaying.currentTime = 0;
-            }
-
-            this.audios[this.data.currentIndex].volume = this.volume;
-            this.audios[this.data.currentIndex].play();
-
-            this.data.currentlyPlaying = this.audios[this.data.currentIndex];
-            text('.current-song', this.data.currentlyPlaying.title);
-            KLoad.emit('CurrentSong', this.data.currentlyPlaying.title);
-        },
-
-        setMusic: function (music) {
-            if (!music) {
-                music = [];
-            }
-
-            this.data.currentIndex = -1;
-            this.data.songs = music;
-            this.data.songNames = [];
-            this.audios = [];
-
-            [].forEach.call(this.data.songs, function (song) {
-                const aud = new Audio(song.url);
-
-                aud.addEventListener('ended', function () {
-                    this.nextSong();
-                }.bind(this));
-                aud.volume = this.volume;
-                aud.title = song.name;
-
-                this.audios.push(aud);
-                this.data.songNames.push(song.name);
-            }.bind(this));
-
-            return this;
-        },
-
-        setVolume: function (volume) {
-            if (!volume && volume !== 0) {
-                volume = 10;
-            }
-
-            this.volume = volume / 100;
-
-            if (this.data.currentlyPlaying) {
-                this.data.currentlyPlaying.volume = this.volume;
-            }
-
-            return this;
+        next: function() {
+            let divs = this.container.children;
+            for(let i=0; i<divs.length; i++) divs[i].style.opacity = '0';
+            divs[this.index].style.opacity = '1';
+            this.index = (this.index + 1) % this.bgs.length;
         }
-    }
+    };
 
-    function fixNames(data) {
-        var steamid = data.steamid;
-        text('name_' + steamid, data.personaname);
-    }
-
-    const rules_block = document.getElementById('k-load-rules');
-
-    var rulesInterval, ruleBlockCounter = 0;
-
-    function setRules() {
-        if (rules_block) {
-            clearInterval(rulesInterval);
-            clearChildren(rules_block);
-
-            const num_blocks = Math.ceil(window.rules.length / window.globalConfig.rules.perPage);
-            var ruleCount = 0;
-
-
-            for (var i = 0; i < num_blocks; i++) {
-                var children = [];
-
-                for (var x = 0; x < window.globalConfig.rules.perPage; x++) {
-                    if (ruleCount < window.rules.length) {
-                        children.push(
-                            elem('div', {className: 'k-load-rule', innerText: window.rules[ruleCount].rule})
-                        );
-
-                        ruleCount++;
-                    }
-                }
-
-                rules_block.appendChild(
-                    elem('div', {id: 'k-load-rule-block-' + i, className: 'k-load-rule-block'}, children)
-                );
-            }
-
-            if(!rules_block.childNodes[ruleBlockCounter]) return;
-            rules_block.childNodes[ruleBlockCounter].style.display = 'block';
-            rules_block.childNodes[ruleBlockCounter].classList.add('active');
-
-            if (num_blocks > 1) {
-                rulesInterval = setInterval(function () {
-                    const rules_block = document.getElementById('k-load-rules');
-
-                    rules_block.childNodes[ruleBlockCounter].classList.remove('active');
-                    setTimeout(function () {
-                        rules_block.childNodes[ruleBlockCounter].style.display = 'none';
-
-                        var nextSib = rules_block.childNodes[ruleBlockCounter].nextSibling;
-
-                        if (nextSib) {
-                            ruleBlockCounter++;
-                        } else {
-                            ruleBlockCounter = 0;
-                            nextSib = rules_block.childNodes[ruleBlockCounter];
-                        }
-
-                        nextSib.style.display = 'block';
-
-                        setTimeout(function () {
-                            nextSib.classList.add('active');
-                        }, 100);
-                    }.bind(rules_block), window.globalConfig.rules.fade);
-                }, window.globalConfig.rules.duration);
+    // Правила (Слайдер)
+    function startRules() {
+        let block = document.getElementById('k-load-rules');
+        if(!window.rules || window.rules.length === 0) { block.innerHTML = "Нет правил."; return; }
+        
+        block.innerHTML = '';
+        let perPage = window.globalConfig.rules.perPage || 3;
+        let blocks = [];
+        for(let i = 0; i < window.rules.length; i += perPage) {
+            let div = document.createElement('div');
+            div.className = 'k-load-rule-block';
+            window.rules.slice(i, i+perPage).forEach(r => {
+                div.innerHTML += `<div class="k-load-rule">${r.rule}</div>`;
+            });
+            blocks.push(div);
+            block.appendChild(div);
+        }
+        
+        if(blocks.length > 0) {
+            let curr = 0;
+            blocks[curr].classList.add('active');
+            if(blocks.length > 1) {
+                setInterval(() => {
+                    blocks[curr].classList.remove('active');
+                    curr = (curr + 1) % blocks.length;
+                    setTimeout(() => blocks[curr].classList.add('active'), 500);
+                }, 5000);
             }
         }
     }
 
-    KLoad.Rules = {}
-    KLoad.Rules.genericCounterFix = function () {
-        const ruleBlockCssNum = Math.ceil(window.rules.length / window.globalConfig.rules.perPage);
-        var ruleBlockCssFix = '';
-
-        for (var x = 1; x <= ruleBlockCssNum; x++) {
-            ruleBlockCssFix += generateRuleBlockCss(x);
-        }
-
-        function generateRuleBlockCss(nth) {
-            return '.k-load-rule-block:nth-child('+nth+') {counter-reset: rule '+window.globalConfig.rules.perPage*(nth-1)+';}';
-        }
-
-        document.body.innerHTML += '<style>'+ruleBlockCssFix+'</style>';
+    // Сообщения
+    function startMessages() {
+        if(!window.messages || window.messages.length === 0) return;
+        let el = document.querySelector('.messages');
+        let curr = 0;
+        el.innerText = window.messages[curr].message;
+        setInterval(() => {
+            el.style.opacity = '0';
+            setTimeout(() => {
+                curr = (curr + 1) % window.messages.length;
+                el.innerText = window.messages[curr].message;
+                el.style.opacity = '1';
+            }, 500);
+        }, 4000);
     }
 
-    const staff_block = document.getElementById('k-load-staff');
-    var staffInterval, staffBlockCounter = 0, staffActive = false;
-
-    function setStaff() {
-        if (staff_block) {
-            clearInterval(staffInterval);
-            clearChildren(staff_block);
-
-            staffActive = true;
-
-            const num_blocks = Math.ceil(window.staff.length / window.globalConfig.staff.perPage);
-
-            var staffCount = 0;
-            var staff_fade_delay = 1000;
-
-            for (var i = 0; i < num_blocks; i++) {
-                var children = [];
-
-                for (var x = 0; x < window.globalConfig.staff.perPage; x++) {
-                    if (staffCount < staff.length) {
-                        var staff_member = window.staff[staffCount];
-                        children.push(
-                            elem('div', {className: 'k-load-staff'}, [
-                                elem('div', {className: 'k-load-staff-avatar'}, [
-                                    elem('img', {
-                                        className: 'avatar avatar-'+staff_member.steamid
-                                    })
-                                ]),
-                                elem('div', {className: 'k-load-staff-info'}, [
-                                    elem('span', {
-                                        className: 'k-load-staff--name username-' + staff_member.steamid,
-                                        innerText: staff_member.steamid
-                                    }),
-                                    elem('span', {className: 'k-load-staff--rank', innerText: staff_member.rank})
-                                ])
-                            ])
-                        );
-
-                        staffCount++;
-                    }
-                }
-
-                var tmp_staff_block = elem('div', {id: 'k-load-staff-block-' + i, className: 'k-load-staff-block'}, children);
-                staff_block.appendChild(tmp_staff_block);
-            }
-
-            fixStaff(window.staff)
-
-            if (num_blocks > 1) {
-                staffInterval = setInterval(function () {
-                    const staff_block = document.getElementById('k-load-staff');
-
-                    staff_block.childNodes[staffBlockCounter].classList.remove('active');
-                    const tmpCounter = staffBlockCounter;
-                    setTimeout(function () {
-                        staff_block.childNodes[tmpCounter].style.display = 'none';
-
-                        var nextSib = staff_block.childNodes[tmpCounter].nextSibling;
-
-                        if (nextSib) {
-                            staffBlockCounter = tmpCounter+1;
-                        } else {
-                            staffBlockCounter = 0;
-                            nextSib = staff_block.childNodes[staffBlockCounter];
-                        }
-                        nextSib.style.display = 'block';
-
-                        setTimeout(function () {
-                            nextSib.classList.add('active');
-                        }, 100);
-                    }.bind(staff_block), staff_fade_delay / 2);
-                }, window.globalConfig.staff.duration);
-            }
-        }
-    }
-
-    function fixStaff(data) {
-        for (var i = 0; i < data.length; i++) {
-            var row = data[i]
-            text('.username-'+row.steamid, row.personaname);
-            image('.avatar-'+row.steamid, 'https://images.weserv.nl/?url=' + row.avatarmedium);
-        }
-
-        if(!staff_block.childNodes[staffBlockCounter]) return;
-
-        staff_block.childNodes[staffBlockCounter].style.display = 'block';
-        staff_block.childNodes[staffBlockCounter].classList.add('active');
-    }
-
-    setStaff();
-    setRules();
-</script>
-
-
-<script>
     KLoad.init();
+    if(window.backgrounds) KLoad.Backgrounds.init(window.backgrounds);
+    startRules();
+    startMessages();
 
-    if(backgrounds.length > 0) {
-        KLoad.Backgrounds.init(backgrounds, window.globalConfig.backgrounds);
-    }
-
-    KLoad.Music.init(music, window.globalConfig.music.volume);
-
-    KLoad.emit('Ready');
-
-    /**
-     * Start up demo mode.
-     */
-    function demoMode() {
-        KLoad.data.demoMode = true;
-
-        SetFilesNeeded(Math.floor(Math.random() * 150) + 75);
-        GameDetails('gmodload', window.location.href, 'gm_construct', 24, '76561197960287930', 'sandbox', Math.floor(Math.random() * 100) + 1, 'en', 'Sandbox');
-
-        demoInterval = setInterval(function () {
-            if (KLoad.data.files.downloaded >= KLoad.data.files.needed) {
-                KLoad.data.files.downloaded = 0;
-            }
-
-            DownloadingFile('example/folder/file-' + str_random_v2() + '.ext');
-        }, 125);
-    }
-
-    /**
-     * If we're not in game, demo the loading screen.
-     */
+    // ДЕМО РЕЖИМ (Если открыто в браузере)
     if (!KLoad.isGmod) {
-        demoMode();
+        KLoad.data.demoMode = true;
+        window.SetFilesNeeded(150);
+        window.GameDetails('ClassiX MiniGames', window.location.href, 'mg_run_v2', 32, '76561197960287930', 'minigames', 50, 'ru', 'MiniGames');
+        setInterval(function () {
+            if (KLoad.data.files.downloaded >= KLoad.data.files.needed) KLoad.data.files.downloaded = 0;
+            window.DownloadingFile('models/player/custom_skin_' + Math.floor(Math.random()*1000) + '.mdl');
+        }, 100);
     }
 </script>
-
-
-<script id="plausible-script">!function(){"use strict";var t=window.location,e=window.document,a=e.getElementById("plausible-script");function i(t){console.warn("Ignoring Event: "+t)}function n(n,r){if(/^localhost$|^127(\.[0-9]+){0,2}\.[0-9]+$|^\[::1?\]$/.test(t.hostname)||"file:"===t.protocol)return i("localhost");if(!(window._phantom||window.__nightmare||window.navigator.webdriver||window.Cypress)){try{if("true"===window.localStorage.plausible_ignore)return i("localStorage flag")}catch(l){}var s={};s.n=n,s.u=t.href,s.d=a.getAttribute("data-domain"),s.r=e.referrer||null,s.w=window.innerWidth,r&&r.meta&&(s.m=JSON.stringify(r.meta)),r&&r.props&&(s.p=r.props);var o=new XMLHttpRequest;o.open("POST","https://analytics.physgun.com/api/event",!0),o.setRequestHeader("Content-Type","text/plain"),o.send(JSON.stringify(s)),o.onreadystatechange=function(){4===o.readyState&&r&&r.callback&&r.callback()}}}var r=window.plausible&&window.plausible.q||[];window.plausible=n;for(var l,s=0;s<r.length;s++)n.apply(this,r[s]);function o(){l!==t.pathname&&(l=t.pathname,n("pageview"))}var p,c=window.history;c.pushState&&(p=c.pushState,c.pushState=function(){p.apply(this,arguments),o()},window.addEventListener("popstate",o)),"prerender"===e.visibilityState?e.addEventListener("visibilitychange",function(){l||"visible"!==e.visibilityState||o()}):o()}();</script>
 </body>
 </html>
